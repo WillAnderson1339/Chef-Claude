@@ -29,3 +29,4 @@ api-keys.js
 # test files not to be included
 test.donotinclude.js
 *.donotinclude.js
+api-secret-keys.js
