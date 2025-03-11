@@ -11,6 +11,7 @@ function Main() {
     const [ingredients, setIngredients] = React.useState(["All the main spices", "Mushrooms", "Asperagus"])
     // const [recipeShown, setRecipeShown] = React.useState(false)
     const [recipe, setRecipe] = React.useState("")
+    const [aiChoice, setAiChoice] = React.useState("chef-claude")
     
     function addIngredient(formData) {
         const newIngredient = formData.get("ingredient")
@@ -20,11 +21,12 @@ function Main() {
     async function getRecipe() {
         // setRecipeShown(prevShown => !prevShown)
 
-        // const newRecipe = getRecipefromChefClaude(ingredients).then(setRecipe)
         // const newRecipe = getRecipefromChefClaude(ingredients)
         const recipeMarkdown = await getRecipeFromMistral(ingredients)
-        console.log("received recipe Markdown", recipeMarkdown)
+        // console.log("received recipe Markdown", recipeMarkdown)
         setRecipe(recipeMarkdown)
+        // alternative: remove the async and await and use .then
+        // getRecipefromChefClaude(ingredients).then(setRecipe)
 
         // getRecipeFromMistral(ingredients).then(setRecipe)
     }
