@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # API Seret Keys
-api-keys.json
+api-keys.js
