@@ -3,20 +3,30 @@ import React from 'react'
 
 import IngredientsList from './IngredientsList'
 import ClaudeRecipe from './ClaudeRecipe'
+import { getRecipefromChefClaude, getRecipeFromMistral } from '../services/ai-combined'
 
 import '../css/Main.css'
 
 function Main() {
-    const [ingredients, setIngredients] = React.useState(["Salt", "Pepper"])
-    const [recipeShown, setRecipeShown] = React.useState(false)
-
+    const [ingredients, setIngredients] = React.useState(["All the main spices", "Mushrooms", "Asperagus"])
+    // const [recipeShown, setRecipeShown] = React.useState(false)
+    const [recipe, setRecipe] = React.useState("")
+    
     function addIngredient(formData) {
         const newIngredient = formData.get("ingredient")
         setIngredients(prev => [...prev, newIngredient])
     }
 
-    function toggleRecipeShown() {
-        setRecipeShown(prevShown => !prevShown)
+    async function getRecipe() {
+        // setRecipeShown(prevShown => !prevShown)
+
+        // const newRecipe = getRecipefromChefClaude(ingredients).then(setRecipe)
+        // const newRecipe = getRecipefromChefClaude(ingredients)
+        const recipeMarkdown = await getRecipeFromMistral(ingredients)
+        console.log("received recipe Markdown", recipeMarkdown)
+        setRecipe(recipeMarkdown)
+
+        // getRecipeFromMistral(ingredients).then(setRecipe)
     }
 
   return (
@@ -32,10 +42,9 @@ function Main() {
             <button>Add Ingredient</button>
         </form>
 
-        {ingredients.length > 0 && 
-        <IngredientsList ingredients={ingredients} toggleRecipeShown={toggleRecipeShown}/>}
+        {ingredients.length > 0 && <IngredientsList ingredients={ingredients} getRecipe={getRecipe} />}
 
-        {recipeShown === true && <ClaudeRecipe />}
+        {recipe && <ClaudeRecipe recipe={recipe} />}
     </main>
   )
 }
