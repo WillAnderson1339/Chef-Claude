@@ -43,8 +43,6 @@ export async function getRecipefromChefClaude(ingredientsArr) {
 }
 
 
-// const apiKey = import.meta.env.VITE_HF_ACCESS_TOKEN // Replace 'your-api-key-here' with your actual API key
-// const hf_apiKey = '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'
 const hf_apiKey = HF_APIKEY
 const hf = new HfInference(hf_apiKey)
 
