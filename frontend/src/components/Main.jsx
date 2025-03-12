@@ -3,7 +3,7 @@ import React from 'react'
 
 import IngredientsList from './IngredientsList'
 import ClaudeRecipe from './ClaudeRecipe'
-import { getRecipefromChefClaude, getRecipeFromMistral } from '../services/ai-combined'
+import { getRecipefromChefClaude, getRecipeFromMistral, getRecipeFromOpenAI } from '../services/ai-combined'
 
 import '../css/Main.css'
 
@@ -11,29 +11,61 @@ function Main() {
     const [ingredients, setIngredients] = React.useState(["All the main spices", "Mushrooms", "Asperagus"])
     // const [recipeShown, setRecipeShown] = React.useState(false)
     const [recipe, setRecipe] = React.useState("")
-    const [aiChoice, setAiChoice] = React.useState("chef-claude")
-    
+    const [aiChoice, setAiChoice] = React.useState("OpenAI")
+
+    const handleAIChoiceChange = (event) => {
+        setAiChoice(event.target.value);
+        console.log('Selected value:', event.target.value);
+      };
+       
     function addIngredient(formData) {
         const newIngredient = formData.get("ingredient")
         setIngredients(prev => [...prev, newIngredient])
     }
 
     async function getRecipe() {
+        console.log("ai choice:", aiChoice)
         // setRecipeShown(prevShown => !prevShown)
 
+        setRecipe("") // clear the recipe before getting a new one"")
+
         // const newRecipe = getRecipefromChefClaude(ingredients)
-        const recipeMarkdown = await getRecipeFromMistral(ingredients)
-        // console.log("received recipe Markdown", recipeMarkdown)
-        setRecipe(recipeMarkdown)
+
+        // let recipeMarkdown = ""
+        // recipeMarkdown = await getRecipeFromMistral(ingredients)
+        // setRecipe(recipeMarkdown)
+
         // alternative: remove the async and await and use .then
         // getRecipefromChefClaude(ingredients).then(setRecipe)
 
         // getRecipeFromMistral(ingredients).then(setRecipe)
+
+        if (aiChoice === "chef-claude") {
+            getRecipefromChefClaude(ingredients).then(setRecipe)
+        } else if (aiChoice === "mistral") {
+            getRecipeFromMistral(ingredients).then(setRecipe)
+        }
+        else if (aiChoice === "OpenAI") {
+            getRecipeFromOpenAI(ingredients).then(setRecipe)
+        }
+        else {
+            console.log("Invalid AI choice")
+        }
+        // aiChoice === "chef-claude" ? getRecipefromChefClaude(ingredients).then(setRecipe) : getRecipeFromMistral(ingredients).then(setRecipe)
     }
 
   return (
     <main>
+        <div className="ai-choice-container">
+        <label htmlFor="ai-choice">Choose an AI to generate your recipe:</label>
+        <select id="ai-choice" value={aiChoice} onChange={handleAIChoiceChange}>
+            <option value="chef-claude">Anthropic</option>
+            <option value="mistral">Mistral</option>
+            <option value="OpenAI">OpenAI</option>
+        </select>
+        </div>
         <form className="add-ingredient-form" action={addIngredient}>
+
             <input 
             type="text" 
             // placeholder="e.g. oregano"

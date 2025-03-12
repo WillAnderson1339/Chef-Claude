@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import '../css/ClaudeRecipe.css'
 
 function ClaudeRecipe(props) {
-    console.log("Recipe props:", props)
+    // console.log("Recipe props:", props)
 
     return (
         <section className="suggested-recipe-container" aria-live="polite">

@@ -2,6 +2,16 @@ main {
     padding: 30px 30px 10px;    /* 3 values is interpreted as: top left and right bottom */
 }
 
+.ai-choice-container {
+  margin-bottom: 28px;
+}
+
+.ai-choice-container > select {
+  margin-left: 10px;
+  min-width: 110px;
+  border-radius: 6px;
+}
+
 .add-ingredient-form {
     display: flex;
     justify-content: center;
@@ -40,6 +50,7 @@ main {
 /*  the following styles taken from yenhtran 
     https://github.com/yenhtran/chef-claude/blob/main/src/index.css
 */
+/*
 ul.ingredients-list {
     margin-bottom: 48px;
   }
@@ -92,4 +103,6 @@ ul.ingredients-list {
   .suggested-recipe-container ul li, .suggested-recipe-container ol li {
     margin-bottom: 8px;
   }
+    */
+
   /*  end of styles taken from yenhtran */
