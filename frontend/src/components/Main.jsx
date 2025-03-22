@@ -12,6 +12,9 @@ function Main() {
     // const [recipeShown, setRecipeShown] = React.useState(false)
     const [recipe, setRecipe] = React.useState("")
     const [aiChoice, setAiChoice] = React.useState("OpenAI")
+    const recipeSection = React.useRef(null)
+    const [defaultIngredient, setDefaultIngredient] = React.useState("Beef")
+    const [removingItem, setRemovingItem] = React.useState(null)
 
     const handleAIChoiceChange = (event) => {
         setAiChoice(event.target.value);
@@ -21,7 +24,27 @@ function Main() {
     function addIngredient(formData) {
         const newIngredient = formData.get("ingredient")
         setIngredients(prev => [...prev, newIngredient])
+        setDefaultIngredient("")
     }
+
+    function removeIngredient(id) {
+        // Filter out the item
+        /*
+        const updatedIngredients = ingredients.filter(
+          ingredient => ingredient !== id.ingredient
+        );
+    
+        setIngredients(updatedIngredients);
+        */
+
+      setRemovingItem(id.ingredient);
+
+    // Delay state update to let animation play
+    setTimeout(() => {
+        setIngredients(prev => prev.filter(item => item !== id.ingredient));
+        setRemovingItem(null);
+    }, 400); // match your CSS animation duration
+}
 
     async function getRecipe() {
         console.log("ai choice:", aiChoice)
@@ -42,7 +65,8 @@ function Main() {
 
         if (aiChoice === "chef-claude") {
             getRecipefromChefClaude(ingredients).then(setRecipe)
-        } else if (aiChoice === "mistral") {
+        } 
+        else if (aiChoice === "mistral") {
             getRecipeFromMistral(ingredients).then(setRecipe)
         }
         else if (aiChoice === "OpenAI") {
@@ -51,8 +75,23 @@ function Main() {
         else {
             console.log("Invalid AI choice")
         }
-        // aiChoice === "chef-claude" ? getRecipefromChefClaude(ingredients).then(setRecipe) : getRecipeFromMistral(ingredients).then(setRecipe)
+        
     }
+    
+    React.useEffect(() => {
+        if (recipe !== "" && recipeSection.current !== null) {
+            recipeSection.current.scrollIntoView({behavior: "smooth"})
+            
+            /*
+            // interesting alternative to scrolling something into view
+            const yCoord = recipeSection.current.getBoundingClientRect().top
+            window.scroll({
+            top: yCoord,
+            behavior: "smooth"
+            })
+            */
+        }
+    }, [recipe]) 
 
   return (
     <main>
@@ -69,14 +108,22 @@ function Main() {
             <input 
             type="text" 
             // placeholder="e.g. oregano"
-            defaultValue="Beef"
+            // defaultValue="Prawns"
+            defaultValue={defaultIngredient}
             aria-label="Add ingredient"
             name="ingredient"
             />
             <button>Add Ingredient</button>
         </form>
 
-        {ingredients.length > 0 && <IngredientsList ingredients={ingredients} getRecipe={getRecipe} />}
+        {ingredients.length > 0 && 
+        <IngredientsList 
+            ref={recipeSection} 
+            ingredients={ingredients} 
+            getRecipe={getRecipe} 
+            removeIngredient={removeIngredient}
+            removingItem={removingItem}
+        />}
 
         {recipe && <ClaudeRecipe recipe={recipe} />}
     </main>
