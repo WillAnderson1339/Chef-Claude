@@ -11,6 +11,7 @@ ul.ingredients-list > li {
   list-style: disc;
 }
 
+/*  NOTE: why have we lost the bullet dots on the <li> items? It happened when I implemented the animation on remove */
 .ingredient-item {
   color: #475467;
   line-height: 28px;
